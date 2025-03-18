@@ -21,10 +21,14 @@ public class PlantController {
 
     public void updateGrowth(long now) {
         if (!plant.isDead() && plant.getWaterLevel() > 0) {
-            // Augmenter la croissance de 1 toute les 1 secondes
-            if (now - lastGrowthTime >= 1_000_000_000) { // 1 seconde en nanosecondes
-                plant.setGrowthVariable(plant.getGrowthVariable() + 1);
-                lastGrowthTime = now;
+            if (lastGrowthTime == 0) {
+                lastGrowthTime = now; // Initialiser le temps
+            }
+            long elapsedTime = now - lastGrowthTime;
+            if (elapsedTime >= 1_000_000_000) { // 1 seconde en nanosecondes
+                int growthIncrement = (int) (elapsedTime / 1_000_000_000); // Calculer le nombre de secondes écoulées
+                plant.setGrowthVariable(plant.getGrowthVariable() + growthIncrement);
+                lastGrowthTime = now; // Mettre à jour le temps
             }
         }
     }
